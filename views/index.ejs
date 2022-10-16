@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width; initial-scale=1">
+		<title>Index</title>
+		<link rel="stylesheet" href="/style.css">
+	</head>
+	<body>
+		<h1>Hello, <%= locals.username || "world!" %></h1>
+		<% if (locals.username) { %>
+		<form action="/sign-out" method="post">
+			<p>
+				<input type="submit" value="Sign out">
+			</p>
+		</form>
+		<% } else { %>
+		<p><a href="sign-in">Sign in</a></p>
+		<% } %>
+	</body>
+</html>

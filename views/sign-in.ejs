@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width; initial-scale=1">
+		<title>Index</title>
+		<link rel="stylesheet" href="/style.css">
+	</head>
+	<body>
+		<h1>Sign in</h1>
+		<% if (locals.message) { %>
+		<div class="message">
+			<p><%= locals.message %></p>
+		</div>
+		<% } %>
+		<form action="/sign-in" method="post">
+			<p>
+				<label for="username">Username</label>
+				<input type="text" id="username" name="username" autocomplete="username">
+			</p>
+			<p>
+				<label for="password">Password</label>
+				<input type="text" id="password" name="password" autocomplete="current-password">
+			</p>
+			<p>
+				<input type="submit" value="Sign in">
+			</p>
+		</form>
+	</body>
+</html>
