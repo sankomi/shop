@@ -17,8 +17,17 @@ function get(sql, params = []) {
 		});
 	});
 }
+function all(sql, params = []) {
+	return new Promise((resolve, reject) => {
+		db.all(sql, params, (err, results) => {
+			if (err) reject(err);
+			else resolve(results);
+		});
+	});
+}
 
 module.exports = {
 	run,
 	get,
+	all,
 }

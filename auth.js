@@ -19,7 +19,7 @@ router.use(passport.initialize());
 router.use(passport.session());
 
 passport.use(new LocalStrategy(async (username, password, callback) => {
-	const row = await db.get(
+	let row = await db.get(
 		`SELECT id, username, hashed, salt FROM users WHERE username = ?;`,
 		[username],
 	);
@@ -45,7 +45,6 @@ passport.deserializeUser((user, callback) => {
 });
 
 router.get("/", (req, res) => {
-	console.log(req.user);
 	res.render("index", {username: req.user?.username});
 });
 router.get("/sign-in", (req, res) => {
@@ -68,21 +67,21 @@ router.get("/sign-up", (req, res) => {
 	res.render("sign-up");
 });
 router.post("/sign-up", async (req, res, next) => {
-	const row = await db.get(
+	let row = await db.get(
 		`SELECT id FROM users WHERE username = ?;`,
 		[req.body.username],
 	);
 	if (row) return res.render("sign-up", {message: "Username already in use"});
 	else {				
-		const salt = crypto.randomBytes(16).toString("hex");
+		let salt = crypto.randomBytes(16).toString("hex");
 		crypto.pbkdf2(req.body.password, salt, 1000, 32, "sha256", async (err, hashed) => {
 			if (err) return next(err);
-			const result = await db.run(
+			let result = await db.run(
 				`INSERT INTO users (username, hashed, salt) VALUES(?, ?, ?);`,
 				[req.body.username, hashed.toString("hex"), salt],
 			);
 			if (result.id) { 
-				const user = {
+				let user = {
 					id: result.id,
 					username: req.body.username,
 				}
