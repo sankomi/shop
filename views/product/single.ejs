@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width; initial-scale=1">
-		<title>Index</title>
-		<link rel="stylesheet" href="/style.css">
-	</head>
-	<body>
+<%- include("../parts/header") %>
 		<% if (locals.product) { %>
 		<h1><%= product.title %></h1>
 		<p><img src="<%= product.image || "http://placekitten.com/200/200" %>"></p>
@@ -44,5 +36,4 @@
 		<h1>Error!</h1>
 		<p>We can't find the product you are looking for.</p>
 		<% } %>
-	</body>
-</html>
+<%- include("../parts/footer") %>

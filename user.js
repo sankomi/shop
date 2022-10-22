@@ -47,9 +47,6 @@ passport.deserializeUser((user, callback) => {
 	});
 });
 
-router.get("/", (req, res) => {
-	res.render("index", {username: req.user?.username});
-});
 router.get("/sign-in", (req, res) => {
 	res.render("sign-in");
 });

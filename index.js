@@ -41,17 +41,26 @@ app.use(async (req, res, next) => {
 	next();
 });
 
+//always pass user info to views
+app.use((req, res, next) => {
+	if (!req.user) return next();
+	res.locals.id = req.user.id;
+	res.locals.username = req.user.username;
+	res.locals.manager = req.user.manager;
+	next();
+});
+
 const product = require("./product");
 app.get("/product/", async (req, res) => {
 	let single = await product.single(+req.query.id);
-	res.render("product-single", {product: single});
+	res.render("product/single", {product: single});
 });
 app.get("/products/", async (req, res) => {
 	let filter = {
 		category: +req.query.category,
 	};
 	let products = await product.list(filter);
-	res.render("product-list", {products});
+	res.render("product/list", {products});
 });
 
 let cart = require("./cart");
@@ -75,5 +84,9 @@ app.get("/checkout", async (req, res) => {
 
 app.use("/admin", require("./admin"));
 app.use("/", require("./user").router);
+
+app.get("/", (req, res) => {
+	res.render("index");
+});
 
 app.listen(port, () => console.log(`listening to port ${port}`));

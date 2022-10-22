@@ -8,6 +8,7 @@ html {
 
 ul > li > a {
 	display: block;
+	width: max-content;
 }
 img {
 	max-width: 100%;

@@ -13,7 +13,7 @@ router.use((req, res, next) => {
 const product = require("./product");
 
 router.get("/add/", async (req, res) => {
-	res.render("admin-product-add");
+	res.render("admin/product-add");
 });
 router.post("/add/", async (req, res) => {
 	let title = req.body.title;
@@ -29,7 +29,7 @@ router.post("/add/", async (req, res) => {
 
 router.get("/edit/", async (req, res) => {
 	let single = await product.single(+req.query.id);
-	res.render("admin-product-edit", {product: single});
+	res.render("admin/product-edit", {product: single});
 });
 router.post("/edit/", async (req, res) => {
 	let id = +req.query.id;
@@ -46,18 +46,18 @@ router.post("/edit/", async (req, res) => {
 
 router.get("/products/", async (req, res) => {
 	let products = await product.list();
-	res.render("admin-product-list", {products});
+	res.render("admin/product-list", {products});
 });
 
 const user = require("./user");
 
 router.get("/users/", async (req, res) => {
 	let users = await user.list();
-	res.render("admin-user-list", {users});
+	res.render("admin/user-list", {users});
 });
 
 router.get("/", (req, res) => {
-	res.render("admin");
+	res.render("admin/admin");
 });
 
 module.exports = router;

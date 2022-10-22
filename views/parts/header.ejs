@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width; initial-scale=1">
+	<title>Index</title>
+	<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+	<header>
+		<p>This is header - hello, <%= locals.username || "world" %>!</p>
+		<nav>
+			<ul>
+				<li><a href="/">Home</a></li>
+				<li><a href="/products/">Products</a></li>
+				<li><a href="/checkout/">Checkout</a></li>
+				<li><a href="/change-password/">Change password</a></li>
+				<% if (locals.manager) { %>
+				<li><a href="/admin/">Admin</a></li>
+				<% } %>
+				<% if (locals.username) { %>
+				<li><a href="/sign-out/">Sign out</a></li>
+				<% } else { %>
+				<li><a href="/sign-in/">Sign in</a></li>
+				<% } %>
+			</ul>
+		</nav>
+	</header>
+	<main>
