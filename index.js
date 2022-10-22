@@ -61,7 +61,7 @@ app.get("/products/:category?", async (req, res) => {
 
 let cart = require("./cart");
 app.post("/cart-add", async (req, res) => {
-	cart.add(req.session, req.body.id, req.body.stock);
+	cart.add(req.session, req.body.id, req.body.quantity);
 	res.sendStatus(200);
 });
 

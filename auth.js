@@ -25,13 +25,15 @@ passport.use(new LocalStrategy(async (username, password, callback) => {
 	);
 	if (!row) return callback(null, false, {message: "Incorrect username or password"});
 	
-	crypto.pbkdf2(password, row.salt, 1000, 32, "sha256", (err, hashed) => {
-		if (err) return callback(err);
+	try {
+		let hashed = await crypto.pbkdf2Sync(password, row.salt, 1000, 32, "sha256");
 		if (row.hashed == hashed.toString("hex")) {
 			return callback(null, row);
 		}
 		return callback(null, false, {message: "Incorrect username or password"});
-	});
+	} catch (err) {
+		return callback(err);
+	}
 }));
 passport.serializeUser((user, callback) => {
 	process.nextTick(() => {
@@ -72,10 +74,10 @@ router.post("/sign-up", async (req, res, next) => {
 		[req.body.username],
 	);
 	if (row) return res.render("sign-up", {message: "Username already in use"});
-	else {				
-		let salt = crypto.randomBytes(16).toString("hex");
-		crypto.pbkdf2(req.body.password, salt, 1000, 32, "sha256", async (err, hashed) => {
-			if (err) return next(err);
+	else {
+		try {
+			let salt = await crypto.randomBytes(16).toString("hex");
+			let hashed = await crypto.pbkdf2Sync(req.body.password, salt, 1000, 32, "sha256");
 			let result = await db.run(
 				`INSERT INTO users (username, hashed, salt) VALUES(?, ?, ?);`,
 				[req.body.username, hashed.toString("hex"), salt],
@@ -90,7 +92,9 @@ router.post("/sign-up", async (req, res, next) => {
 					res.redirect("/");
 				});
 			}
-		});
+		} catch (err) {
+			return next(err);
+		}
 	}
 });
 router.post("/sign-out", (req, res, next) => {
@@ -98,6 +102,39 @@ router.post("/sign-out", (req, res, next) => {
 		if (err) return next(err);
 		res.redirect("/");
 	});
+});
+router.get("/change-password", (req, res) => {
+	if (!req.user) return res.redirect("/sign-in");
+	res.render("change-password");
+});
+router.post("/change-password", async (req, res) => {
+	if (!req.user) return res.redirect("/sign-in");
+	let username = req.user.username;
+	let currentPassword = req.body.currentPassword;
+	let newPassword = req.body.newPassword;
+	if (!currentPassword || !newPassword) return res.render("change-password", {message: "Passwords cannot be emtpy"});
+	
+	let row = await db.get(
+		`SELECT id, username, hashed, salt FROM users WHERE username = ?;`,
+		[username],
+	);
+	if (!row) return res.render("change-password", {message: "User does not exist"});
+	
+	try {
+		let hashed = await crypto.pbkdf2Sync(currentPassword, row.salt, 1000, 32, "sha256");
+		if (row.hashed == hashed.toString("hex")) {
+			let newHashed = await crypto.pbkdf2Sync(newPassword, row.salt, 1000, 32, "sha256");
+			await db.run(
+				`UPDATE users SET hashed = ? WHERE username = ?;`,
+				[newHashed.toString("hex"), username],
+			);
+			return res.render("change-password", {message: "Password changed"});
+		} else {
+			return res.render("change-password", {message: "Incorrect password"});
+		}
+	} catch (err) {
+		return res.render("change-password", {message: "Error"});
+	}
 });
 
 module.exports = router;
