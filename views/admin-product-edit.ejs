@@ -8,7 +8,7 @@
 	</head>
 	<body>
 		<h1>Edit Product</h1>
-		<form action="/edit/<%= product.id %>" method="post">
+		<form action=".?id=<%= product.id %>" method="post">
 			<p>
 				<label for="title">Product Title</label>
 				<input type="text" id="title" name="title" value="<%= product.title %>">

@@ -5,3 +5,11 @@
 html {
 	font-family: sans-serif;
 }
+
+ul > li > a {
+	display: block;
+}
+img {
+	max-width: 100%;
+	max-height: 100%;
+}

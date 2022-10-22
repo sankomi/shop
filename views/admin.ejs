@@ -7,11 +7,9 @@
 		<link rel="stylesheet" href="/style.css">
 	</head>
 	<body>
-		<h1>Hello, <%= locals.username || "world!" %></h1>
-		<% if (locals.username) { %>
-		<p><a href="./sign-out/">Sign out</a></p>
-		<% } else { %>
-		<p><a href="./sign-in/">Sign in</a></p>
-		<% } %>
+		<h1>Admin</h1>
+		<p><a href="./add/">add</a></p>
+		<p><a href="./products/">products</a></p>
+		<p><a href="./users/">users</a></p>
 	</body>
 </html>

@@ -16,60 +16,55 @@ app.use(session({
 
 app.set("view engine", "ejs");
 
+//always add trailing slash so relative urls don't stuff up
+app.use((req, res, next) => {
+	if (req.path.substr(-1) !== "/") {
+		return res.redirect(301, req.baseUrl + req.url + "/");
+	}
+	next();
+});
+
+//if signed in and manager not defined check manager
+const passport = require("passport");
+app.use(passport.initialize());
+app.use(passport.session());
+const db = require("./db");
+app.use(async (req, res, next) => {
+	if (!req.user) return next();
+	if (req.user.manager === undefined) {
+		let result = await db.get(
+			`SELECT manager FROM users WHERE id = ?;`,
+			[req.user.id],
+		);
+		req.user.manager = !!result.manager; //convert number to boolean
+	}
+	next();
+});
+
 const product = require("./product");
-app.get("/add", async (req, res) => {
-	res.render("product-add");
-});
-app.post("/add", async (req, res) => {
-	let title = req.body.title;
-	let description = req.body.description;
-	let image = req.body.image;
-	let price = +req.body.price;
-	let salePrice = +req.body.salePrice;
-	let stock = 100000;
-	let categoryId = +req.body.category;
-	await product.add(title, description, image, price, salePrice, stock, categoryId);
-	res.render("product-add");
-});
-app.get("/edit/:id?", async (req, res) => {
-	let single = await product.single(+req.params.id);
-	res.render("product-edit", {product: single});
-});
-app.post("/edit/:id?", async (req, res) => {
-	let id = +req.params.id;
-	let title = req.body.title;
-	let description = req.body.description;
-	let image = req.body.image;
-	let price = +req.body.price;
-	let salePrice = +req.body.salePrice;
-	let stock = 100000;
-	let categoryId = +req.body.category;
-	await product.update(id, title, description, image, price, salePrice, stock, categoryId);
-	res.render("product-edit", {product: {id, title, description, image, price, salePrice, stock, categoryId}});
-});
-app.get("/product/:id?", async (req, res) => {
-	let single = await product.single(+req.params.id);
+app.get("/product/", async (req, res) => {
+	let single = await product.single(+req.query.id);
 	res.render("product-single", {product: single});
 });
-app.get("/products/:category?", async (req, res) => {
+app.get("/products/", async (req, res) => {
 	let filter = {
-		category: +req.params.category,
+		category: +req.query.category,
 	};
 	let products = await product.list(filter);
 	res.render("product-list", {products});
 });
 
 let cart = require("./cart");
-app.post("/cart-add", async (req, res) => {
+app.post("/cart-add/", async (req, res) => {
 	cart.add(req.session, req.body.id, req.body.quantity);
 	res.sendStatus(200);
 });
 
-app.get("/cart", (req, res) => {
+app.get("/cart/", (req, res) => {
 	cart.add(req.session, Math.floor(Math.random() * 5), 1);
 	res.sendStatus(200);
 });
-app.get("/remove", (req, res) => {
+app.get("/remove/", (req, res) => {
 	cart.remove(req.session, Math.floor(Math.random() * 5), 1);
 	res.sendStatus(200);
 });
@@ -78,6 +73,7 @@ app.get("/checkout", async (req, res) => {
 	res.render("checkout", {products});
 });
 
-app.use("/", require("./auth"));
+app.use("/admin", require("./admin"));
+app.use("/", require("./user").router);
 
 app.listen(port, () => console.log(`listening to port ${port}`));

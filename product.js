@@ -50,7 +50,7 @@ async function single(id) {
 }
 
 //list product
-async function list(filter) {
+async function list(filter = []) {
 	let where = ``;
 	let params = [];
 	if (typeof filter.category === "number" && filter.category > 0) {

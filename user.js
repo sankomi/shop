@@ -11,7 +11,8 @@ db.run(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		username TEXT,
 		hashed TEXT,
-		salt TEXT
+		salt TEXT,
+		manager INTEGER
 	);`
 );
 
@@ -69,6 +70,9 @@ router.get("/sign-up", (req, res) => {
 	res.render("sign-up");
 });
 router.post("/sign-up", async (req, res, next) => {
+	let numUsers = await db.get(`SELECT COUNT(*) AS count FROM users;`);
+	let firstUser = numUsers.count === 0;
+	
 	let row = await db.get(
 		`SELECT id FROM users WHERE username = ?;`,
 		[req.body.username],
@@ -82,7 +86,15 @@ router.post("/sign-up", async (req, res, next) => {
 				`INSERT INTO users (username, hashed, salt) VALUES(?, ?, ?);`,
 				[req.body.username, hashed.toString("hex"), salt],
 			);
-			if (result.id) { 
+			if (result.id) {
+				//if first user sign up make them manager
+				if (firstUser) {
+					await db.run(
+						`UPDATE users SET manager = 1 WHERE id = ?`,
+						[result.id],
+					);
+				}
+				
 				let user = {
 					id: result.id,
 					username: req.body.username,
@@ -97,7 +109,7 @@ router.post("/sign-up", async (req, res, next) => {
 		}
 	}
 });
-router.post("/sign-out", (req, res, next) => {
+router.get("/sign-out", (req, res, next) => {
 	req.logout(err => {
 		if (err) return next(err);
 		res.redirect("/");
@@ -137,4 +149,12 @@ router.post("/change-password", async (req, res) => {
 	}
 });
 
-module.exports = router;
+async function list() {
+	let list = await db.all(`SELECT * FROM users;`);
+	return list;
+}
+
+module.exports = {
+	router,
+	list,
+}

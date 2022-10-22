@@ -14,7 +14,7 @@
 					for (const product of products) {
 			%>
 			<li>
-				<a href="/product/<%= product.id %>">
+				<a href="/product/?id=<%= product.id %>">
 					<p><img src="<%= product.image || "http://placekitten.com/200/200" %>"></p>
 					<h2><%= product.title %></h2>
 					<% 	if (product.salePrice && product.salePrice < product.price) { %>

@@ -25,7 +25,7 @@
 				const quantity = document.querySelector("#quantity");
 				const add = document.querySelector("#add");
 				add.addEventListener("click", event => {
-					fetch("/cart-add", {
+					fetch("/cart-add/", {
 						headers: {
 							"Content-Type": "application/json",
 						},
