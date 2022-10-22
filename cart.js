@@ -2,16 +2,18 @@ const db = require("./db");
 
 class Cart {
 	static add(cart, id, quantity) {
+		if (+quantity <= 0) return;
 		if (cart[id]) {
-			cart[id] += quantity;
+			cart[id] += +quantity;
 		} else {
-			cart[id] = quantity;
+			cart[id] = +quantity;
 		}
 	}
 	static remove(cart, id, quantity) {
+		if (+quantity <= 0) return;
 		if (cart[id]) {
 			if (quantity) {
-				cart[id] -= quantity;
+				cart[id] -= +quantity;
 			}
 			if (cart[id] <= 0) {
 				delete cart[id];
@@ -30,13 +32,11 @@ class Cart {
 function add(session, id, quantity) {
 	if (!session.cart) session.cart = {};
 	Cart.add(session.cart, id, quantity);
-	console.log(Cart.log(session.cart));
 }
 
 function remove(session, id, quantity) {
 	if (!session.cart) session.cart = {};
 	Cart.remove(session.cart, id, quantity);
-	console.log(Cart.log(session.cart));
 }
 
 async function checkout(session) {
@@ -47,7 +47,10 @@ async function checkout(session) {
 		WHERE id IN (${productIds.map((element) => "?").join(", ")});`,
 		productIds
 	);
-	//todo: add product quantity to array
+	for (const product of products) {
+		product.quantity = session.cart[product.id];
+	}
+	
 	return products;
 }
 

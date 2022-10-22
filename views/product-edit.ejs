@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width; initial-scale=1">
+		<title>Index</title>
+		<link rel="stylesheet" href="/style.css">
+	</head>
+	<body>
+		<h1>Edit Product</h1>
+		<form action="/edit/<%= product.id %>" method="post">
+			<p>
+				<label for="title">Product Title</label>
+				<input type="text" id="title" name="title" value="<%= product.title %>">
+			</p>
+			<p>
+				<label for="image">Image</label>
+				<input type="text" id="image" name="image" value="<%= product.image %>">
+			</p>
+			<p>
+				<label for="price">Price</label>
+				<input type="number" id="price" name="price" value="<%= product.price %>">
+			</p>
+			<p>
+				<label for="salePrice">Sale Price</label>
+				<input type="number" id="salePrice" name="salePrice" value="<%= product.salePrice %>">
+			</p>
+			<p>
+				<label for="category">Category</label>
+				<input type="number" id="category" name="category" value="<%= product.categoryId %>">
+			</p>
+			<p>
+				<label for="description">Description</label>
+				<input type="text" id="description" name="description" value="<%= product.description %>">
+			</p>
+			<p>
+				<input type="submit" value="Save">
+			</p>
+		</form>
+	</body>
+</html>

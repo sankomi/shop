@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width; initial-scale=1">
+		<title>Index</title>
+		<link rel="stylesheet" href="/style.css">
+	</head>
+	<body>
+		<h1>Products</h1>
+		<ul>
+			<%
+				if (locals.products) {
+					for (const product of products) {
+			%>
+			<li>
+				<a href="/product/<%= product.id %>">
+					<p><img src="<%= product.image || "http://placekitten.com/200/200" %>"></p>
+					<h2><%= product.title %></h2>
+					<% 	if (product.salePrice && product.salePrice < product.price) { %>
+					<p><del>$<%= (product.price * 0.01).toFixed(2) %></del> $<%= (product.salePrice * 0.01).toFixed(2) %></p>
+					<% 	} else { %>
+					<p>$<%= (product.price * 0.01).toFixed(2) %></p>
+					<% 	} %>
+				</a>
+			</li>
+			<%
+					}
+				}
+			%>
+		</ul>
+	</body>
+</html>

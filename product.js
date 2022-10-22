@@ -53,7 +53,7 @@ async function single(id) {
 async function list(filter) {
 	let where = ``;
 	let params = [];
-	if (typeof filter.category === "number") {
+	if (typeof filter.category === "number" && filter.category > 0) {
 		where += ` categoryId = ?`;
 		params.push(filter.category);
 	}

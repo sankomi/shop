@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width; initial-scale=1">
+		<title>Index</title>
+		<link rel="stylesheet" href="/style.css">
+	</head>
+	<body>
+		<% if (locals.product) { %>
+		<h1><%= product.title %></h1>
+		<p><img src="<%= product.image || "http://placekitten.com/200/200" %>"></p>
+		<% 	if (product.salePrice && product.salePrice < product.price) { %>
+		<p><del>$<%= (product.price * 0.01).toFixed(2) %></del> $<%= (product.salePrice * 0.01).toFixed(2) %></p>
+		<% 	} else { %>
+		<p>$<%= (product.price * 0.01).toFixed(2) %></p>
+		<% 	} %>
+		<p>
+			<input id="quantity" type="number" min="0" value="1">
+			<button id="add" data-product-id="<%= product.id %>">Add to Cart</button>
+		</p>
+		<p><%= product.description %></p>
+		<script>
+			{
+				const quantity = document.querySelector("#quantity");
+				const add = document.querySelector("#add");
+				add.addEventListener("click", event => {
+					fetch("/cart-add", {
+						headers: {
+							"Content-Type": "application/json",
+						},
+						method: "POST",
+						body: JSON.stringify({
+							id: event.currentTarget.dataset.productId,
+							quantity: quantity.value,
+						}),
+					}).then(response => {
+						if (response.status === 200) console.log("Added to cart.");
+					});
+				});
+			}
+		</script>
+		<% } else { %>
+		<h1>Error!</h1>
+		<p>We can't find the product you are looking for.</p>
+		<% } %>
+	</body>
+</html>

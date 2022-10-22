@@ -18,27 +18,53 @@ app.set("view engine", "ejs");
 
 const product = require("./product");
 app.get("/add", async (req, res) => {
-	let title = Math.random().toString();
-	let description = "desc";
-	let image = "aaa.jpg";
-	let price = 1000;
-	let salePrice = 1000;
-	let quantity = 100;
-	let categoryId = 1;
-	await product.add(title, description, image, price, salePrice, quantity, categoryId);
-	res.json({ok: "ok"});
+	res.render("product-add");
 });
-app.get("/single:?", async (req, res) => {
-	res.json(await product.single(req.query.id));
+app.post("/add", async (req, res) => {
+	let title = req.body.title;
+	let description = req.body.description;
+	let image = req.body.image;
+	let price = +req.body.price;
+	let salePrice = +req.body.salePrice;
+	let stock = 100000;
+	let categoryId = +req.body.category;
+	await product.add(title, description, image, price, salePrice, stock, categoryId);
+	res.render("product-add");
 });
-app.get("/list:?", async (req, res) => {
+app.get("/edit/:id?", async (req, res) => {
+	let single = await product.single(+req.params.id);
+	res.render("product-edit", {product: single});
+});
+app.post("/edit/:id?", async (req, res) => {
+	let id = +req.params.id;
+	let title = req.body.title;
+	let description = req.body.description;
+	let image = req.body.image;
+	let price = +req.body.price;
+	let salePrice = +req.body.salePrice;
+	let stock = 100000;
+	let categoryId = +req.body.category;
+	await product.update(id, title, description, image, price, salePrice, stock, categoryId);
+	res.render("product-edit", {product: {id, title, description, image, price, salePrice, stock, categoryId}});
+});
+app.get("/product/:id?", async (req, res) => {
+	let single = await product.single(+req.params.id);
+	res.render("product-single", {product: single});
+});
+app.get("/products/:category?", async (req, res) => {
 	let filter = {
-		category: +req.query.category,
+		category: +req.params.category,
 	};
-	res.json(await product.list(filter));
+	let products = await product.list(filter);
+	res.render("product-list", {products});
 });
 
 let cart = require("./cart");
+app.post("/cart-add", async (req, res) => {
+	cart.add(req.session, req.body.id, req.body.stock);
+	res.sendStatus(200);
+});
+
 app.get("/cart", (req, res) => {
 	cart.add(req.session, Math.floor(Math.random() * 5), 1);
 	res.sendStatus(200);
@@ -48,7 +74,8 @@ app.get("/remove", (req, res) => {
 	res.sendStatus(200);
 });
 app.get("/checkout", async (req, res) => {
-	res.json(await cart.checkout(req.session));
+	let products = await cart.checkout(req.session);
+	res.render("checkout", {products});
 });
 
 app.use("/", require("./auth"));
