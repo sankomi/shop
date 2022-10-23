@@ -40,7 +40,7 @@ function remove(session, id, quantity) {
 }
 
 async function checkout(session) {
-	if (!session.cart) return null;
+	if (!session.cart) return [];
 	let productIds = Object.keys(session.cart);
 	let products = await db.all(
 		`SELECT * FROM products

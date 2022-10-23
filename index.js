@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
@@ -82,6 +84,7 @@ app.get("/checkout", async (req, res) => {
 	res.render("checkout", {products});
 });
 
+app.use("/payment", require("./payment"));
 app.use("/admin", require("./admin"));
 app.use("/", require("./user").router);
 

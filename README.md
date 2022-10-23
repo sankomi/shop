@@ -10,3 +10,5 @@ An e-commerce website project using Stripe for payment.
 - EJS
 - Passport.js
 - sqlite3
+- stripe
+- dotenv

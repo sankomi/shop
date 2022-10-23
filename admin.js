@@ -24,7 +24,7 @@ router.post("/add/", async (req, res) => {
 	let stock = 100000;
 	let categoryId = +req.body.category;
 	await product.add(title, description, image, price, salePrice, stock, categoryId);
-	res.render("admin-product-add");
+	res.render("admin/product-add");
 });
 
 router.get("/edit/", async (req, res) => {
@@ -41,7 +41,7 @@ router.post("/edit/", async (req, res) => {
 	let stock = 100000;
 	let categoryId = +req.body.category;
 	await product.update(id, title, description, image, price, salePrice, stock, categoryId);
-	res.render("admin-product-edit", {product: {id, title, description, image, price, salePrice, stock, categoryId}});
+	res.render("admin/product-edit", {product: {id, title, description, image, price, salePrice, stock, categoryId}});
 });
 
 router.get("/products/", async (req, res) => {

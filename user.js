@@ -113,11 +113,11 @@ router.get("/sign-out", (req, res, next) => {
 	});
 });
 router.get("/change-password", (req, res) => {
-	if (!req.user) return res.redirect("/sign-in");
+	if (!req.user) return res.redirect("/sign-in/");
 	res.render("change-password");
 });
 router.post("/change-password", async (req, res) => {
-	if (!req.user) return res.redirect("/sign-in");
+	if (!req.user) return res.redirect("/sign-in/");
 	let username = req.user.username;
 	let currentPassword = req.body.currentPassword;
 	let newPassword = req.body.newPassword;

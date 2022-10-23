@@ -23,25 +23,5 @@
 			%>
 		</ul>
 		<p>Total: $<%= total.toFixed(2) %></p>
-		<script>
-			{
-				const addButtons = document.querySelectorAll(".add-button");
-				addButtons.forEach(button => {
-					button.addEventListener("click", event => {
-						fetch("/cart-add", {
-							headers: {
-								"Content-Type": "application/json",
-							},
-							method: "POST",
-							body: JSON.stringify({
-								id: event.currentTarget.dataset.productId,
-								quantity: 1,
-							}),
-						}).then(response => {
-							if (response.status === 200) alert("Added to cart.");
-						});
-					});
-				});
-			}
-		</script>
+		<p><a href="/payment">Pay now</a></p>
 <%- include("parts/footer") %>
