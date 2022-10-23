@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
 				product_data: {
 					name: product.title,
 				},
-				unit_amount: product.salePrice || Math.min(product.salePrice, product.price),
+				unit_amount: product.salePrice || Math.min(product.salePrice, product.price) || product.price,
 			},
 			quantity: product.quantity,
 		};

@@ -5,8 +5,8 @@
 				let total = 0;
 				if (locals.products) {
 					for (const product of products) {
-						total += product.quantity * product.price * 0.01;
 						let price = Math.min(product.salePrice || product.price, product.price);
+						total += product.quantity * price * 0.01;
 			%>
 			<li>
 				<p><%= product.title %></p>
