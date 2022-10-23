@@ -1,5 +1,6 @@
 <%- include("../parts/header") %>
 		<% if (locals.product) { %>
+		<p id="message" style="display: none;">Added to cart</p>
 		<h1><%= product.title %></h1>
 		<p><img src="<%= product.image || "http://placekitten.com/200/200" %>"></p>
 		<% 	if (product.salePrice && product.salePrice < product.price) { %>
@@ -14,9 +15,14 @@
 		<p><%= product.description %></p>
 		<script>
 			{
+				let adding = false;
+				const message = document.querySelector("#message");
+				message.addEventListener("click", event => message.style.display = "none");
 				const quantity = document.querySelector("#quantity");
 				const add = document.querySelector("#add");
 				add.addEventListener("click", event => {
+					if (adding) return;
+					adding = true;
 					fetch("/cart-add/", {
 						headers: {
 							"Content-Type": "application/json",
@@ -27,7 +33,8 @@
 							quantity: quantity.value,
 						}),
 					}).then(response => {
-						if (response.status === 200) console.log("Added to cart.");
+						if (response.status === 200) message.style.display = null;
+						adding = false;
 					});
 				});
 			}

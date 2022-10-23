@@ -1,4 +1,8 @@
 <%- include("../parts/header") %>
-		<h1>Payment success!</h1>
-		<p>Thank you!</p>
+		<h1>Payment <%= locals.success? "success!": "unsuccessful..." %></h1>
+		<% if (locals.success) { %>
+		<p>Thank you! <%= locals.orderId? "Your order ID is " + locals.orderId + ".": null %></p>
+		<% } else { %>
+		<p><%= locals.message || "Not really sure what happened!" %> <%= locals.orderId? "Your order ID is " + locals.orderId + ".": null %></p>
+		<% } %>
 <%- include("../parts/footer") %>

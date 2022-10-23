@@ -39,7 +39,7 @@ function remove(session, id, quantity) {
 	Cart.remove(session.cart, id, quantity);
 }
 
-async function checkout(session) {
+async function checkout(session, simple = false) {
 	if (!session.cart) return [];
 	let productIds = Object.keys(session.cart);
 	let products = await db.all(
@@ -49,6 +49,11 @@ async function checkout(session) {
 	);
 	for (const product of products) {
 		product.quantity = session.cart[product.id];
+		if (simple) {
+			delete product.image;
+			delete product.description;
+			delete product.stock;
+		}
 	}
 	
 	return products;

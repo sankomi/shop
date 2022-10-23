@@ -56,6 +56,13 @@ router.get("/users/", async (req, res) => {
 	res.render("admin/user-list", {users});
 });
 
+const order = require("./order");
+
+router.get("/orders/", async (req, res) => {
+	let orders = await order.list();
+	res.render("admin/order-list", {orders});
+});
+
 router.get("/", (req, res) => {
 	res.render("admin/admin");
 });

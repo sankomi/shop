@@ -1,0 +1,18 @@
+<%- include("../parts/header") %>
+		<h1>Orders</h1>
+		<ul>
+			<%
+				if (locals.orders) {
+					for (const order of orders) {
+			%>
+			<li>
+				<h2><%= order.id %> - <%= order.orderId %></h2>
+				<p>Email: <%= order.email %></p>
+				<p>Order: <%= order.json %></p>
+			</li>
+			<%
+					}
+				}
+			%>
+		</ul>
+<%- include("../parts/footer") %>
