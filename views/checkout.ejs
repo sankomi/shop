@@ -1,27 +1,29 @@
 <%- include("parts/header") %>
-		<h1>Checkout</h1>
-		<ul>
-			<%
-				let total = 0;
-				if (locals.products) {
-					for (const product of products) {
-						let price = Math.min(product.salePrice || product.price, product.price);
-						total += product.quantity * price * 0.01;
-			%>
-			<li>
-				<p><%= product.title %></p>
-				<p><img src="<%= product.image || "http://placekitten.com/200/200" %>"></p>
-				<% 	if (product.salePrice && product.salePrice < product.price) { %>
-				<p><del>$<%= (product.price * 0.01).toFixed(2) %></del> $<%= (product.salePrice * 0.01).toFixed(2) %> x <%= product.quantity %> = $<%= (product.quantity * price * 0.01).toFixed(2) %></p>
-				<% 	} else { %>
-				<p>$<%= (price * 0.01).toFixed(2) %> x <%= product.quantity %> = $<%= (product.quantity * price * 0.01).toFixed(2) %></p>
-				<% 	} %>
-			</li>
-			<%
+		<div class="checkout">
+			<h1>Checkout</h1>
+			<ul class="checkout-list">
+				<%
+					let total = 0;
+					if (locals.products) {
+						for (const product of products) {
+							let price = Math.min(product.salePrice || product.price, product.price);
+							total += product.quantity * price * 0.01;
+				%>
+				<li class="checkout-list__product">
+					<img class="checkout-list__image" src="<%= product.image %>" onerror="this.src = 'http://placekitten.com/500/500/?image=' + (Math.floor(Math.random() * 20)).toString();">
+					<h2 class="checkout-list__title"><%= product.title %></h2>
+					<% 	if (product.salePrice && product.salePrice < product.price) { %>
+					<p class="checkout-list__price"><del>$<%= (product.price * 0.01).toFixed(2) %></del> $<%= (product.salePrice * 0.01).toFixed(2) %> x <%= product.quantity %> = $<%= (product.quantity * price * 0.01).toFixed(2) %></p>
+					<% 	} else { %>
+					<p class="checkout-list__price">$<%= (price * 0.01).toFixed(2) %> x <%= product.quantity %> = $<%= (product.quantity * price * 0.01).toFixed(2) %></p>
+					<% 	} %>
+				</li>
+				<%
+						}
 					}
-				}
-			%>
-		</ul>
-		<p>Total: $<%= total.toFixed(2) %></p>
-		<p><a href="/payment">Pay now</a></p>
+				%>
+			</ul>
+			<p class="checkout__total">Total: $<%= total.toFixed(2) %></p>
+			<p class="checkout__pay"><a class="button" href="/payment">Pay now</a></p>
+		</div>
 <%- include("parts/footer") %>

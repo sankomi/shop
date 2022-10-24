@@ -12,7 +12,7 @@ app.use(express.urlencoded({extended: false}));
 const session = require("express-session");
 const SQLiteStore = require("connect-sqlite3")(session);
 app.use(session({
-	store: new SQLiteStore,
+	store: new SQLiteStore({db: "sessions.db"}),
 	secret: "terces",
 	resave: false,
 	saveUninitialized: false,

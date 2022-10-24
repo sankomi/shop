@@ -1,44 +1,51 @@
 <%- include("../parts/header") %>
 		<% if (locals.product) { %>
-		<p id="message" style="display: none;">Added to cart</p>
-		<h1><%= product.title %></h1>
-		<p><img src="<%= product.image || "http://placekitten.com/200/200" %>"></p>
-		<% 	if (product.salePrice && product.salePrice < product.price) { %>
-		<p><del>$<%= (product.price * 0.01).toFixed(2) %></del> $<%= (product.salePrice * 0.01).toFixed(2) %></p>
-		<% 	} else { %>
-		<p>$<%= (product.price * 0.01).toFixed(2) %></p>
-		<% 	} %>
-		<p>
-			<input id="quantity" type="number" min="0" value="1">
-			<button id="add" data-product-id="<%= product.id %>">Add to Cart</button>
-		</p>
-		<p><%= product.description %></p>
-		<script>
-			{
-				let adding = false;
-				const message = document.querySelector("#message");
-				message.addEventListener("click", event => message.style.display = "none");
-				const quantity = document.querySelector("#quantity");
-				const add = document.querySelector("#add");
-				add.addEventListener("click", event => {
-					if (adding) return;
-					adding = true;
-					fetch("/cart-add/", {
-						headers: {
-							"Content-Type": "application/json",
-						},
-						method: "POST",
-						body: JSON.stringify({
-							id: event.currentTarget.dataset.productId,
-							quantity: quantity.value,
-						}),
-					}).then(response => {
-						if (response.status === 200) message.style.display = null;
-						adding = false;
+		<div class="product">
+			<p class="product__message message message--ajax" id="message" style="display: none;">Added to cart</p>
+			<h1 class="product__title"><%= product.title %></h1>
+			<img class="product__image" src="<%= product.image %>" onerror="this.src = 'http://placekitten.com/500/500/?image=' + (Math.floor(Math.random() * 20)).toString();">
+			<% 	if (product.salePrice && product.salePrice < product.price) { %>
+			<p class="product__price"><del>$<%= (product.price * 0.01).toFixed(2) %></del> $<%= (product.salePrice * 0.01).toFixed(2) %></p>
+			<% 	} else { %>
+			<p class="product__price">$<%= (product.price * 0.01).toFixed(2) %></p>
+			<% 	} %>
+			<form class="product__add-form" id="add-form">
+				<input id="quantity" type="number" min="0" value="1">
+				<button id="add" data-product-id="<%= product.id %>">Add to Cart</button>
+			</form>
+			<p class="product__description"><%= product.description %></p>
+			<script>
+				{
+					let adding = false;
+					const message = document.querySelector("#message");
+					message.addEventListener("click", event => message.style.display = "none");
+					const quantity = document.querySelector("#quantity");
+					const add = document.querySelector("#add");
+					const addForm = document.querySelector("#add-form");
+					addForm.addEventListener("submit", event => {
+						event.preventDefault();
+						if (adding) return;
+						adding = true;
+						fetch("/cart-add/", {
+							headers: {
+								"Content-Type": "application/json",
+							},
+							method: "POST",
+							body: JSON.stringify({
+								id: add.dataset.productId,
+								quantity: quantity.value,
+							}),
+						}).then(response => {
+							if (response.status === 200) {
+								message.style.display = null;
+								setTimeout(() => message.style.display = "none", 5000);
+							}
+							adding = false;
+						});
 					});
-				});
-			}
-		</script>
+				}
+			</script>
+		</div>
 		<% } else { %>
 		<h1>Error!</h1>
 		<p>We can't find the product you are looking for.</p>
