@@ -6,26 +6,39 @@ const cart = require("./cart");
 
 router.get("/", async (req, res) => {
 	let products = await cart.checkout(req.session);
-	if (!products.length) return res.redirect("/checkout/");
+	if (!products.length) {
+		let products = await cart.checkout(req.session);
+		return res.render("checkout", {products, message: "Cart is empty"});
+	}
+	
+	let total = 0;
 	
 	let lineItems = products.map(product => {
+		let price = product.salePrice || Math.min(product.salePrice, product.price) || product.price;
+		total += price * product.quantity;
+		
 		return {
 			price_data: {
 				currency: "aud",
 				product_data: {
 					name: product.title,
 				},
-				unit_amount: product.salePrice || Math.min(product.salePrice, product.price) || product.price,
+				unit_amount: price,
 			},
 			quantity: product.quantity,
 		};
 	});
 	
+	if (total > 99999999) {
+		let products = await cart.checkout(req.session);
+		return res.render("checkout", {products, message: "Total amount must be less than $999999.99"});
+	}
+	
 	const session = await stripe.checkout.sessions.create({
 		line_items: lineItems,
 		mode: "payment",
-		success_url: "http://127.0.0.1:3000/payment/success/?session_id={CHECKOUT_SESSION_ID}",
-		cancel_url: "http://127.0.0.1:3000/payment/cancel/",
+		success_url: process.env.URL + "/payment/success/?session_id={CHECKOUT_SESSION_ID}",
+		cancel_url: process.env.URL + "/payment/cancel/",
 	});
 	
 	res.redirect(303, session.url);

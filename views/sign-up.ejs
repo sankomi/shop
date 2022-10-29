@@ -1,10 +1,8 @@
 <%- include("parts/header") %>
-		<h1>Sign Up</h1>
 		<% if (locals.message) { %>
-		<div class="message">
-			<p><%= locals.message %></p>
-		</div>
+		<p class="message"><%= locals.message %></p>
 		<% } %>
+		<h1>Sign Up</h1>
 		<form action="." method="post">
 			<p>
 				<label for="username">Username</label>

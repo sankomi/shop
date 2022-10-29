@@ -68,19 +68,12 @@ app.get("/products/", async (req, res) => {
 });
 
 let cart = require("./cart");
-app.post("/cart-add/", async (req, res) => {
+app.post("/product/", async (req, res) => {
 	cart.add(req.session, req.body.id, req.body.quantity);
-	res.sendStatus(200);
+	let single = await product.single(req.body.id);
+	res.render("product/single", {product: single, added: true});
 });
 
-app.get("/cart/", (req, res) => {
-	cart.add(req.session, Math.floor(Math.random() * 5), 1);
-	res.sendStatus(200);
-});
-app.get("/remove/", (req, res) => {
-	cart.remove(req.session, Math.floor(Math.random() * 5), 1);
-	res.sendStatus(200);
-});
 app.get("/checkout", async (req, res) => {
 	let products = await cart.checkout(req.session);
 	res.render("checkout", {products});

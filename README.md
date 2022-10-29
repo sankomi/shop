@@ -1,5 +1,5 @@
 # shop
-An e-commerce website project using Stripe for payment.
+An e-commerce website project using Stripe for payment. [Here](https://sanko-shop.glitch.me/) is a link to live website.
 
 
 ## Stuff used (so far)

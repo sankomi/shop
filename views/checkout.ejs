@@ -1,5 +1,8 @@
 <%- include("parts/header") %>
 		<div class="checkout">
+			<% if (locals.message) { %>
+			<p class="product__message message" id="message"><%= message %></p>
+			<% } %>
 			<h1>Checkout</h1>
 			<ul class="checkout-list">
 				<%
