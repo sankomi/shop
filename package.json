@@ -4,6 +4,7 @@
 	"description": "An e-commerce website project using Stripe for payment.",
 	"main": "index.js",
 	"scripts": {
+		"start": "node index.js",
 		"test": "nodemon index.js"
 	},
 	"author": "sanko",
@@ -21,5 +22,8 @@
 	},
 	"devDependencies": {
 		"nodemon": "^2.0.20"
+	},
+	"engines": {
+		"node": "16.x"
 	}
 }

@@ -83,8 +83,9 @@ app.use("/payment", require("./payment"));
 app.use("/admin", require("./admin"));
 app.use("/", require("./user").router);
 
-app.get("/", (req, res) => {
-	res.render("index");
+app.get("/", async (req, res) => {
+	let random = await product.random();
+	res.render("index", {product: random});
 });
 
 app.listen(port, () => console.log(`listening to port ${port}`));

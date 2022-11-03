@@ -1,4 +1,20 @@
 <%- include("parts/header") %>
 		<h1>Sanko shop</h1>
-		<p>Welcome</p>
+		<p>Welcome!</p>
+		<% if (locals.product) { %>
+		<h2>Recommended for You</h2>
+		<div class="recommend">
+			<a class="recommend__link" href="/product/?id=<%= product.id %>">
+				<img class="recommend__image" src="<%= product.image %>" onerror="this.src = 'http://placekitten.com/500/500/?image=' + (Math.floor(Math.random() * 20)).toString();">
+				<div class="recommend__detail"><h2 class="recommend__title"><%= product.title %></h2>
+					<% 	if (product.salePrice && product.salePrice < product.price) { %>
+					<p class="recommend__price"><del>$<%= (product.price * 0.01).toFixed(2) %></del> $<%= (product.salePrice * 0.01).toFixed(2) %></p>
+					<% 	} else { %>
+					<p class="recommend__price">$<%= (product.price * 0.01).toFixed(2) %></p>
+					<% 	} %>
+					<p class="recommend__description"><%= product.description %></p>
+				</div>
+			</a>
+		</div>
+		<% } %>
 <%- include("parts/footer") %>

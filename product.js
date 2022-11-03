@@ -65,9 +65,21 @@ async function list(filter = []) {
 	return list;
 }
 
+//get random product
+async function random() {
+	let total = await db.get(`SELECT COUNT(*) AS count FROM products;`);
+	let index = Math.floor(Math.random() * total.count);
+	let product = await db.get(
+		`SELECT * FROM products LIMIT 1 OFFSET ?;`,
+		[index],
+	);
+	return product;
+}
+
 module.exports = {
 	add,
 	update,
 	single,
 	list,
+	random,
 };

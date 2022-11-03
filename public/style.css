@@ -133,12 +133,47 @@ input {
 	z-index: 10;
 	
 	display: none;
-	padding: 0.5rem;
+	width: 2rem;
+	height: 2rem;
 	
 	color: black;
 	background-color: transparent;
 	
 	transform: translateY(-50%);
+}
+.header__toggle > div {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+
+	width: 60%;
+	height: 1px;
+	background-color: currentcolor;
+	
+	transition: top 0.25s, opacity 0.25s, transform 0.25s;
+}
+.header__toggle > div:nth-child(1) {
+	top: 30%;
+	transform: translateX(-50%);
+}
+.header__toggle > div:nth-child(2),
+.header__toggle > div:nth-child(3) {
+	transform: translateX(-50%);
+}
+.header__toggle > div:nth-child(4) {
+	top: 70%;
+	transform: translateX(-50%);
+}
+.header--open .header__toggle > div:nth-child(1),
+.header--open .header__toggle > div:nth-child(4) {
+	top: 50%;
+	opacity: 0;
+}
+.header--open .header__toggle > div:nth-child(2) {
+	transform: translateX(-50%) rotate(-45deg);
+}
+.header--open .header__toggle > div:nth-child(3) {
+	transform: translateX(-50%) rotate(45deg);
 }
 .header__toggle:hover {
 	background-color: transparent;
@@ -148,19 +183,18 @@ input {
 		display: block;
 	}
 	.header__nav {
-		display: none;
-		
 		position: fixed;
 		top: 0;
-		left: 0;
+		right: 0;
 		
 		width: 100%;
 		height: 100%;
 		
-		background-color: white;
+		pointer-events: none;
+		filter: drop-shadow(0 0 0.25rem rgba(192, 192, 192, 0.8));
 	}
 	.header--open .header__nav {
-		display: block;
+		pointer-events: auto;
 	}
 	.header__nav ul {
 		flex-direction: column;
@@ -168,7 +202,15 @@ input {
 		align-items: center;
 		height: 100%;
 		
+		background-color: white;
+		
 		text-align: center;
+		
+		clip-path: polygon(100% 0, 100% 0, 100% 0, 100% 0);
+		transition: clip-path 0.25s;
+	}
+	.header--open .header__nav ul {
+		clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 	}
 	.header__nav ul li a {
 		padding: 1rem;
@@ -230,6 +272,37 @@ input {
 	
 	aspect-ratio: 1 / 1;
 	object-fit: cover;
+}
+
+.recommend__link {
+	display: flex;
+	gap: 1rem;
+	
+	color: inherit;
+	text-decoration:none;
+}
+.recommend__image {
+	display: block;
+	width: 50%;
+	max-width: 20rem;
+	
+	aspect-ratio: 1 / 1;
+	object-fit: cover;
+}
+.recommend__detail > :first-child {
+	margin-top: 0;
+}
+@media (max-width: 40rem) {
+	.recommend__link {
+		display: block;
+	}
+	.recommend__image {
+		width: 100%;
+		max-width: none;
+	}	
+	.recommend__detail > :first-child {
+		margin-top: revert;
+	}
 }
 
 .checkout__total,
